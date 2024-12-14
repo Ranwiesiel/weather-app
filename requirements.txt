@@ -1,0 +1,8 @@
+folium
+jinja2
+requests
+pandas
+flask
+tensorflow
+PIL
+numpy
