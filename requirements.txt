@@ -4,5 +4,5 @@ requests
 pandas
 flask
 tensorflow
-PIL
+pillow
 numpy

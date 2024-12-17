@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-draw/dist/leaflet.draw.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-draw/dist/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_38eb5ea6a30ae8bbf12217ea861d0106 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+
+                .weather-marker {
+                    font-size: 14px;
+                    color: white;
+                    background: rgba(0, 123, 255, 0.8);
+                    border-radius: 10px;
+                    padding: 5px;
+                }
+            </style>
+        
+</head>
+<body>
+    
+    <!-- <div class="info-time position-absolute fw-bold p-3 rounded font-size-1.2rem" style="top: 12px; left: 50px; z-index: 9999; background-color: #d49500; color:white;">
+        <span>{{ d_now }} {{ dname_now }} - {{ h_now }}:00</span>
+    </div> -->
+
+    <div data-bs-toggle="modal" data-bs-target="#klasifikasiCuaca" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 border-1"  style="top: 60px; right: 20px; z-index: 999; cursor: pointer;">
+        <span class="me-2" >Klasifikasi Cuaca</span>
+        <img src="{{ url_for('static', filename='cloudicon.png') }}" alt="icon cuaca" style="height: 50px;">   
+    </div>
+    <a href="/" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4" style="top: 120px; right: 20px; z-index: 999">
+        <span class="me-2 text-dark" >Peramalan Cuaca</span>
+        <img src="{{ url_for('static', filename='weather-forecast.png') }}" alt="icon cuaca" style="height: 50px" />
+      </a>
+      <a href="/cuaca" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4" style="top: 190px; right: 20px; z-index: 999">
+        <span class="me-2 text-dark" >Prediksi Cuaca</span>
+        <img src="{{ url_for('static', filename='meteorology.png') }}" alt="icon cuaca" style="height: 50px" />
+      </a>
+      <a href="/cluster" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4" style="top: 260px; right: 20px; z-index: 999">
+        <span class="me-2 text-dark" >Tingkat Resiko Cuaca Ekstrim</span>
+        <img src="{{ url_for('static', filename='storm.png') }}" alt="icon cuaca" style="height: 50px" />
+      </a>
+    <!-- Modal -->
+    <div class="modal fade" id="klasifikasiCuaca" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Klasifikasi Cuaca</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Masukkan gambar yang ingin diklasifikasikan:
+                <p>
+                <form action="{{ url_for('home') }}" method="POST" enctype="multipart/form-data">
+                    <label for="file">Pilih Gambar:</label>
+                    <input type="file" class="form-control" name="file" required>
+                <hr>
+                {% if predicted_class %}
+                    Hasil prediksi dari: <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image" style="max-width: 100%; height: auto;"><br>
+                    dengan cuaca: <b>{{ predicted_class }}</b>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Prediksi</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    <!-- Map Canvas -->
+    <!-- <div class="folium-map" id="map_38eb5ea6a30ae8bbf12217ea861d0106" ></div> -->
+    
+<div class="container-fluid py-2 sticky-top bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <div class="me-5 info-time fw-bold p-3 rounded font-size-1.2rem" style=" background-color: #d49500; color:white;">
+                <span>{{ d_now }} {{ dname_now }} - {{ h_now }}:00</span>
+            </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav gap-3">
+                <a href="/cuaca?wilayah=surabaya" class="me-2 info-time fw-bold p-3 border border-1 border-light rounded font-size-1.2rem" style=" background-color: #213b5e; color:white;">
+                    Surabaya <i class="{{pred_icon_sby}} ms-2"></i>
+                </a>
+                <a href="/cuaca?wilayah=bangkalan" class="info-time fw-bold p-3 border border-1 border-light rounded font-size-1.2rem" style=" background-color: #213b5e; color:white;">
+                    Bangkalan <i class="{{pred_icon_bkl}} ms-2"></i>
+                </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+</div>
+
+<div style="max-height: 300px;" class="container mt-4">
+    <div style="background-color: #213b5e; max-height: 300px;" class="row align-items-start w-75 rounded">
+        <div style="background-color: #213b5e;" class="col-6 rounded">
+            <div style="background-color: #213b5e;" class="h1 p-3 text-light" >
+                {{request.args.get('wilayah')}}
+            </div>
+
+            <div class="d-flex flex-row row mt-3">
+                <div class="col-3" ><img style="height: 100px; width: 100px;" src="{{pred_logo_weather}}" alt="" srcset=""></div>
+                <div class="col-9 text-light" ><h2>{{pred_class_weather}}</h2>
+                <h2>{{df_weather['temp'][0]}} °C</h2></div>
+            </div>
+        </div>
+        <div class="col-6 p-0 rounded">
+            <div class="folium-map" id="map_38eb5ea6a30ae8bbf12217ea861d0106" style="height: 300px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4 mb-4">
+    <h1>Weather Detail</h1>
+    <div style="background-color: #213b5e;" class="row align-items-start w-75 rounded text-light gap-3 p-3">
+        <div style="height: 200px; background-color: rgba(255, 255, 255, 0.15);" class="col rounded p-3">
+            <div class="h2">Temperature</div>
+            <div class="flex-row row mt-5" >
+                <img class="col-6" style="height: 80px; width: 80px;" src="static/temp.png" alt="" srcset="">
+                <div class="col-8 fs-1 d-flex align-items-center" >
+                    <div style="font-size: 4rem;">{{df_weather['temp'][0]}} °c</div>
+                </div>
+            </div>
+          </div>
+          <div style="height: 200px; background-color: rgba(255, 255, 255, 0.15);" class="col rounded p-3">
+            <div class="h2">Feels Like</div>
+            <div class="flex-row row mt-5" >
+                <img class="col-6" style="height: 80px; width: 80px;" src="static/feelslike.png" alt="" srcset="">
+                <div class="col-8 fs-1 d-flex align-items-center" >
+                    <div style="font-size: 4rem;">{{df_weather['feelslike'][0]}} °c</div>
+                </div>
+            </div>
+          </div>
+          <div style="height: 200px; background-color: rgba(255, 255, 255, 0.15);" class="col rounded p-3">
+            <div class="h2">Humidity</div>
+            <div class="flex-row row mt-5" >
+                <img class="col-6" style="height: 80px; width: 80px;" src="static/humidity.png" alt="" srcset="">
+                <div class="col-8 fs-1 d-flex align-items-center" >
+                    <div style="font-size: 4rem;">{{df_weather['humidity'][0]}} %</div>
+                </div>
+            </div>
+          </div>
+    </div>
+          <div style="background-color: #213b5e;" class="row align-items-start w-75 rounded text-light gap-3 mt-2 p-3">
+            <div style="height: 200px; background-color: rgba(255, 255, 255, 0.15);" class="col rounded p-3">
+                <div class="h2">Wind</div>
+                <div class="flex-row row mt-5" >
+                    <img class="col-6" style="height: 80px; width: 80px;" src="static/wind.png" alt="" srcset="">
+                    <div class="col-8 fs-1 d-flex align-items-center" >
+                        <div style="font-size: 4rem;">3{{df_weather['windspeed'][0]}} kph</div>
+                    </div>
+                </div>
+              </div>
+              <div style="height: 200px; background-color: rgba(255, 255, 255, 0.15);" class="col rounded p-3">
+                <div class="h2">Cloud Cover</div>
+                <div class="flex-row row mt-5" >
+                    <img class="col-6" style="height: 80px; width: 80px;" src="static/clouds.png" alt="" srcset="">
+                    <div class="col-8 fs-1 d-flex align-items-center" >
+                        <div style="font-size: 4rem;">{{df_weather['cloudcover'][0]}} %</div>
+                    </div>
+                </div>
+              </div>
+              <div style="height: 200px; background-color: rgba(255, 255, 255, 0.15);" class="col rounded p-3">
+                <div class="h2">Visibility</div>
+                <div class="flex-row row mt-5" >
+                    <img class="col-6" style="height: 80px; width: 80px;" src="static/low-visibility.png" alt="" srcset="">
+                    <div class="col-8 fs-1 d-flex align-items-center" >
+                        <div style="font-size: 4rem;">{{df_weather['visibility'][0]}} km</div>
+                    </div>
+                </div>
+              </div>
+          </div>
+    </div>
+</div>
+
+<div class="h-25" ></div>
+
+
+
+    </body>
+    <script>
+
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+        let predicted = "{{ predicted_class }}"
+        document.addEventListener("DOMContentLoaded", function() {
+            if(predicted){
+                var myModal = new bootstrap.Modal(document.getElementById('klasifikasiCuaca'), {
+                    keyboard: false
+                });
+                myModal.show();
+            }
+        });
+        var map_38eb5ea6a30ae8bbf12217ea861d0106 = L.map(
+            "map_38eb5ea6a30ae8bbf12217ea861d0106",
+            {
+                center: ['{{json_coor1}}', '{{json_coor2}}'],
+                crs: L.CRS.EPSG3857,
+                zoom: 10,
+                zoomControl: true,
+                preferCanvas: false,
+            }
+        );
+
+
+        
+        // Source map layout
+        var tile_layer_colored = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+            attribution: "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026 \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+            detectRetina: false,
+            maxZoom: 16,
+            minZoom: 10,
+            noWrap: false,
+            opacity: 1,
+            subdomains: "abc",
+            tms: false
+        }
+    );
+    tile_layer_colored.addTo(map_38eb5ea6a30ae8bbf12217ea861d0106);
+
+    var wilayahGeoJSON = JSON.parse('{{ json_geo | tojson | safe }}');
+
+    // Tambahkan GeoJSON untuk wilayah Surabaya
+    var wilayahLayer = L.geoJSON(wilayahGeoJSON, {
+        style: {
+            color: "{{ pred_color_weather }}",
+            weight: 2,
+            fillColor: "{{ pred_color_weather }}",
+            fillOpacity: 0.5
+        }
+    }).addTo(map_38eb5ea6a30ae8bbf12217ea861d0106);
+
+        var wilayahCenter = wilayahLayer.getBounds().getCenter();
+        var surabayaMarker = L.marker(wilayahCenter, {
+            icon: L.divIcon({
+                className: "weather-marker",
+                html: `<div style="text-align:center;">
+                    <b>{{request.args.get('wilayah')}}</b><br>
+                    <b><i class="{{pred_icon_weather}} me-2"></i></b>{{pred_class_weather}}
+                    </div>`,
+                iconSize: [80, 50]
+            })
+        });
+        wilayahLayer.addLayer(surabayaMarker);
+    
+    
+
+    </script>
+</html>
