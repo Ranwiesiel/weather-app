@@ -50,17 +50,17 @@ def predict_sby():
     if predicted_class_decode[0] == 'Cloudy':
         pred_logo = 'static/sun-cloudy.png'
         pred_color = '#BCCCDC'
-        pred_rgb = 'rgb(188, 204, 220, 0,2)'
+        pred_rgb = 'rgba(188, 204, 220, 0.2)'
         pred_icon = 'fa-solid fa-cloud'
     elif predicted_class_decode[0] == 'Clear':
         pred_logo = 'static/sun.png'
         pred_color = '#B1F0F7'
-        pred_rgb = 'rgb(177, 240, 247, 0,2)'
+        pred_rgb = 'rgba(177, 240, 247, 0.2)'
         pred_icon = 'fa-solid fa-sun'
     elif predicted_class_decode[0] == 'Rain':
         pred_logo = 'static/rain.png'
         pred_color = '#63839c'
-        pred_rgb = 'rgb(99, 131, 156, 0,2)'
+        pred_rgb = 'rgba(99, 131, 156, 0.2)'
         pred_icon = 'fa-solid fa-cloud-showers-heavy'
 
 
@@ -112,17 +112,17 @@ def predict_bangkalan():
     if predicted_class_decode[0] == 'Cloudy':
         pred_logo = 'static/sun-cloudy.png'
         pred_color = '#BCCCDC'
-        pred_rgb = 'rgb(188, 204, 220, 0,2)'
+        pred_rgb = 'rgba(188, 204, 220, 0.2)'
         pred_icon = 'fa-solid fa-cloud'
     elif predicted_class_decode[0] == 'Clear':
         pred_logo = 'static/sun.png'
         pred_color = '#B1F0F7'
-        pred_rgb = 'rgb(177, 240, 247, 0,2)'
+        pred_rgb = 'rgba(177, 240, 247, 0.2)'
         pred_icon = 'fa-solid fa-sun'
     elif predicted_class_decode[0] == 'Rain':
         pred_logo = 'static/rain.png'
         pred_color = '#63839c'
-        pred_rgb = 'rgb(99, 131, 156, 0,2)'
+        pred_rgb = 'rgba(99, 131, 156, 0.2)'
         pred_icon = 'fa-solid fa-cloud-showers-heavy'
 
 

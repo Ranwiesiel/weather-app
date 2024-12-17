@@ -57,22 +57,21 @@
     </div> -->
 
     <div data-bs-toggle="modal" data-bs-target="#klasifikasiCuaca" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 border-1"  style="top: 60px; right: 20px; z-index: 999; cursor: pointer;">
-        <span>Klasifikasi Cuaca</span>
+        <span class="me-2" >Klasifikasi Cuaca</span>
         <img src="{{ url_for('static', filename='cloudicon.png') }}" alt="icon cuaca" style="height: 50px;">   
     </div>
-    <a href="/" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4"  style="top: 120px; right: 20px; z-index: 999;">
-        <span>Peramalan Cuaca</span>
-        <img src="{{ url_for('static', filename='cloudicon.png') }}" alt="icon cuaca" style="height: 50px;">   
-    </a>
-    <a href="/cuaca" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4"  style="top: 190px; right: 20px; z-index: 999;">
-        <span>Prediksi Cuaca</span>
-        <img src="{{ url_for('static', filename='cloudicon.png') }}" alt="icon cuaca" style="height: 50px;">   
-    </a>
-    <a href="/cluster" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4"  style="top: 260px; right: 20px; z-index: 999;">
-        <span>Cluster Cuaca</span>
-        <img src="{{ url_for('static', filename='cloudicon.png') }}" alt="icon cuaca" style="height: 50px;">   
-    </a>
-
+    <a href="/" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4" style="top: 120px; right: 20px; z-index: 999">
+        <span class="me-2 text-dark" >Peramalan Cuaca</span>
+        <img src="{{ url_for('static', filename='weather-forecast.png') }}" alt="icon cuaca" style="height: 50px" />
+      </a>
+      <a href="/cuaca" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4" style="top: 190px; right: 20px; z-index: 999">
+        <span class="me-2 text-dark" >Prediksi Cuaca</span>
+        <img src="{{ url_for('static', filename='meteorology.png') }}" alt="icon cuaca" style="height: 50px" />
+      </a>
+      <a href="/cluster" class="position-absolute shadow bg-body-tertiary fw-bold rounded p-1 mt-4" style="top: 260px; right: 20px; z-index: 999">
+        <span class="me-2 text-dark" >Tingkat Resiko Cuaca Ekstrim</span>
+        <img src="{{ url_for('static', filename='storm.png') }}" alt="icon cuaca" style="height: 50px" />
+      </a>
     <!-- Modal -->
     <div class="modal fade" id="klasifikasiCuaca" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -264,9 +263,9 @@
     // Tambahkan GeoJSON untuk wilayah Surabaya
     var wilayahLayer = L.geoJSON(wilayahGeoJSON, {
         style: {
-            color: "{{ pred_color_sby }}",
+            color: "{{ pred_color_weather }}",
             weight: 2,
-            fillColor: "{{pred_rgba_sby}}",
+            fillColor: "{{ pred_color_weather }}",
             fillOpacity: 0.5
         }
     }).addTo(map_38eb5ea6a30ae8bbf12217ea861d0106);
